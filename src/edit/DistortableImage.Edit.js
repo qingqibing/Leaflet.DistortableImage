@@ -5,19 +5,7 @@ L.DistortableImage.Edit = L.Handler.extend({
   options: {
     opacity: 0.7,
     outline: '1px solid red',
-    keymap: {
-     'Backspace': '_removeOverlay', // backspace windows / delete mac
-     'CapsLock': '_toggleRotate',
-     'Escape': '_deselect',
-     'd': '_toggleRotateScale',
-     'r': '_toggleRotateScale',
-     'j': '_toggleOrder',
-     'k': '_toggleOrder',
-     'l': '_toggleLock',
-     'o': '_toggleOutline',
-     's': '_toggleScale',
-		 't': '_toggleTransparency',
-    }
+    keymap: L.distortableImage.action_map
   },
 
   initialize: function(overlay, options) {
@@ -26,12 +14,12 @@ L.DistortableImage.Edit = L.Handler.extend({
     /* Interaction modes. TODO - create API for limiting modes similar to toolbar actions API */
     var modes = ['distort', 'lock', 'rotate', 'scale', 'rotateScale'];
     this._mode = modes[modes.indexOf(overlay.options.mode)] || 'distort';
-    
+
     this._selected = this._overlay.options.selected || false;
     this._transparent = false;
     this._outlined = false;
 
-    L.setOptions(this, options); 
+    L.setOptions(this, options);
   },
 
   /* Run on image selection. */
@@ -81,8 +69,8 @@ L.DistortableImage.Edit = L.Handler.extend({
 
     map.removeLayer(this._handles[this._mode]);
 
-    /** 
-     * ensures if you disable an image while it is multi-selected 
+    /**
+     * ensures if you disable an image while it is multi-selected
      * additional deselection logic is run
      */
     if (L.DomUtil.hasClass(overlay.getElement(), 'selected')) {
@@ -185,7 +173,7 @@ L.DistortableImage.Edit = L.Handler.extend({
         this[handlerName].call(this);
       }
     }
-  }, 
+  },
 
   addTool: function (value) {
     if (value.baseClass === 'leaflet-toolbar-icon' && !this.hasTool(value)) {
@@ -272,7 +260,7 @@ L.DistortableImage.Edit = L.Handler.extend({
     map.removeLayer(this._handles[this._mode]);
 
     /* Switch mode. */
-    if (this._mode === 'rotateScale') { this._mode = 'distort'; } 
+    if (this._mode === 'rotateScale') { this._mode = 'distort'; }
     else { this._mode = 'rotateScale'; }
 
     map.addLayer(this._handles[this._mode]);
@@ -299,9 +287,9 @@ L.DistortableImage.Edit = L.Handler.extend({
 		if (this._mode === 'lock') { return; }
 
     map.removeLayer(this._handles[this._mode]);
-    if (this._mode === 'rotate') { this._mode = 'distort'; } 
+    if (this._mode === 'rotate') { this._mode = 'distort'; }
 		else { this._mode = 'rotate'; }
-		
+
     map.addLayer(this._handles[this._mode]);
   },
 
@@ -357,7 +345,7 @@ L.DistortableImage.Edit = L.Handler.extend({
     var map = this._overlay._map;
 
     map.removeLayer(this._handles[this._mode]);
- 
+
     if (this._mode === 'lock') { this._unlock();
     } else { this._lock(); }
 
@@ -377,8 +365,8 @@ L.DistortableImage.Edit = L.Handler.extend({
   _deselect: function() {
     this._selected = false;
     this._removeToolbar();
-    if (this._mode !== 'lock') { 
-      this._hideMarkers(); 
+    if (this._mode !== 'lock') {
+      this._hideMarkers();
     }
   },
 
@@ -404,7 +392,7 @@ L.DistortableImage.Edit = L.Handler.extend({
 
     var mode = this._mode,
         currentHandle = this._handles[mode];
-    
+
 		currentHandle.eachLayer(function (layer) {
       var drag = layer.dragging,
 			  	opts = layer.options;
@@ -454,7 +442,7 @@ L.DistortableImage.Edit = L.Handler.extend({
         eP.editing._addToolbar();
         return;
       }
-    } 
+    }
 
     this._addToolbar();
   },
@@ -463,7 +451,7 @@ L.DistortableImage.Edit = L.Handler.extend({
     this._addToolbar();
     this._removeToolbar();
   },
-  
+
   _updateToolbarPos: function() {
     var overlay = this._overlay,
       //Find the topmost point on the image.
@@ -471,7 +459,7 @@ L.DistortableImage.Edit = L.Handler.extend({
       toolbar = this.toolbar,
       maxLat = -Infinity;
 
-    if (toolbar && toolbar instanceof L.DistortableImage.PopupBar) { 
+    if (toolbar && toolbar instanceof L.DistortableImage.PopupBar) {
       for (var i = 0; i < corners.length; i++) {
         if (corners[i].lat > maxLat) {
           maxLat = corners[i].lat;
