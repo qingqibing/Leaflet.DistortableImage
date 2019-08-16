@@ -1,5 +1,6 @@
 L.DomUtil = L.DomUtil || {};
 L.DistortableImage = L.DistortableImage || {};
+L.DistortableImage.action_map = L.DistortableImage.action_map || {};
 L.distortableImage = L.DistortableImage;
 
 L.DistortableImage.Keymapper = L.Handler.extend({
@@ -29,7 +30,7 @@ L.DistortableImage.Keymapper = L.Handler.extend({
     }
   },
 
-  removeHooks: function () { 
+  removeHooks: function () {
     if (this._keymapper) {
       L.DomEvent.off(this._toggler, 'click', this._toggleKeymapper, this);
 
@@ -38,12 +39,12 @@ L.DistortableImage.Keymapper = L.Handler.extend({
         mouseenter: this._disableMap,
         mouseleave: this._enableMap,
       }, this);
-     
+
       L.DomUtil.remove(this._toggler);
       L.DomUtil.remove(this._scrollWrapper);
       L.DomUtil.remove(this._keymapper._container);
       this._keymapper = false;
-    } 
+    }
   },
 
   _toggleButton: function () {
@@ -64,7 +65,7 @@ L.DistortableImage.Keymapper = L.Handler.extend({
 
     return wrap;
   },
-  
+
   _setMapper: function (button, wrap) {
     this._keymapper = L.control({ position: this.options.position });
 
@@ -73,7 +74,7 @@ L.DistortableImage.Keymapper = L.Handler.extend({
       el_wrapper.setAttribute('id', 'ldi-keymapper');
       var divider = L.DomUtil.create('br', 'divider');
       el_wrapper.appendChild(divider);
-      el_wrapper.appendChild(wrap);       
+      el_wrapper.appendChild(wrap);
       wrap.insertAdjacentHTML(
         'beforeend',
         '<table><tbody>' +
@@ -116,7 +117,7 @@ L.DistortableImage.Keymapper = L.Handler.extend({
     this._map.scrollWheelZoom.disable();
     this._map.dragging.disable();
   },
-  
+
   _enableMap: function() {
     this._map.scrollWheelZoom.enable();
     this._map.dragging.enable();
