@@ -315,7 +315,7 @@ L.distortableImage.popupBar = function (latlng, options) {
 
 L.DistortableImageOverlay.addInitHook(function () {
   /** Default actions */
-  L.DistortableImageOverlay.ACTIONS = this.ACTIONS = [
+  this.ACTIONS = [
     ToggleTransparency,
     ToggleOutline,
     ToggleLock,
