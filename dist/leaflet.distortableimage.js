@@ -1601,7 +1601,7 @@ var EnableEXIF = L.EditAction.extend({
       html: use,
       tooltip: 'Geolocate Image'
     };
-    L.DistortableImage.action_map.x = 'EXIF.getData(image, L.EXIF(image))';
+
     L.EditAction.prototype.initialize.call(this, map, overlay, options);
   },
 
@@ -1622,7 +1622,7 @@ var Revert = L.EditAction.extend({
       html: use,
       tooltip: 'Restore Original Image Dimensions'
     };
-    L.DistortableImage.action_map.v = 'this._overlay._revert';
+
     L.EditAction.prototype.initialize.call(this, map, overlay, options);
   },
 
@@ -1699,7 +1699,7 @@ L.distortableImage.popupBar = function (latlng, options) {
 
 L.DistortableImageOverlay.addInitHook(function () {
   /** Default actions */
-  L.DistortableImageOverlay.ACTIONS = this.ACTIONS = [
+  this.ACTIONS = [
     ToggleTransparency,
     ToggleOutline,
     ToggleLock,
