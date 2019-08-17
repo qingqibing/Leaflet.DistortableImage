@@ -2644,9 +2644,10 @@ L.DistortableCollection.Edit = L.Handler.extend({
 
 L.DomUtil = L.DomUtil || {};
 L.DistortableImage = L.DistortableImage || {};
-L.DistortableImage.action_map = L.DistortableImage.action_map || {};
 L.distortableImage = L.DistortableImage;
-console.log(L.DistortableImage.action_map);
+// L.DistortableImageOverlay.addInitHook(function () {
+//   console.log(this.ACTIONS);
+// });
 L.DistortableImage.Keymapper = L.Handler.extend({
 
   options: {
@@ -2655,6 +2656,7 @@ L.DistortableImage.Keymapper = L.Handler.extend({
 
   initialize: function (map, options) {
     this._map = map;
+    this.action_map = L.DistortableImage.action_map;
     L.setOptions(this, options);
   },
 
@@ -2712,7 +2714,30 @@ L.DistortableImage.Keymapper = L.Handler.extend({
 
   _setMapper: function (button, wrap) {
     this._keymapper = L.control({ position: this.options.position });
-
+    var actions = this.action_map;
+    var action_map_str = '', buffer = '', val = '';
+    for(var i = 0; i<Object.keys(actions).length; i++){
+      if(Object.values(actions)[i].slice(1,4) === 'get') {
+        val = 'Get' + Object.values(actions)[i].slice(4);
+      }
+      if(Object.values(actions)[i].slice(1,7) === 'remove') {
+        val = 'Remove' + Object.values(actions)[i].slice(7);
+      }
+      if(Object.values(actions)[i].slice(1,7) === 'toggle') {
+        val = 'Toggle' + Object.values(actions)[i].slice(7);
+      }
+      val = val.match(/[A-Z][a-z]+|[0-9]+/g).join(" ");
+      if (Object.values(actions)[i] === Object.values(actions)[i+1]) {
+        buffer = '</kbd><kbd>'+Object.keys(actions)[i];
+        continue;
+      }
+      action_map_str += '<tr><td><div class="left"><span>' +
+      val + '</span></div><div class="right"><kbd>' +
+      Object.keys(actions)[i] + buffer +
+      '</kbd></div></td></tr>';
+      buffer = '';
+      val = '';
+    }
     this._container = this._keymapper.onAdd = function () {
       var el_wrapper = L.DomUtil.create('div', 'ldi-keymapper-hide');
       el_wrapper.setAttribute('id', 'ldi-keymapper');
@@ -2723,15 +2748,7 @@ L.DistortableImage.Keymapper = L.Handler.extend({
         'beforeend',
         '<table><tbody>' +
           '<hr id="keymapper-hr">' +
-          '<tr><td><div class="left"><span>Stack up / down</span></div><div class="right"><kbd>j</kbd>\xa0<kbd>k</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Lock Image</span></div><div class="right"><kbd>l</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Outline</span></div><div class="right"><kbd>o</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Scale</span></div><div class="right"><kbd>s</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Transparency</span></div><div class="right"><kbd>t</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>RotateScale</span></div><div class="right"><kbd>d</kbd>\xa0<kbd>r</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Deselect All</span></div><div class="right"><kbd>esc</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Delete Image</span></div><div class="right"><kbd>delete</kbd>\xa0<kbd>backspace</kbd></div></td></tr>' +
-          '<tr><td><div class="left"><span>Rotate</span></div><div class="right"><kbd>caps</kbd></div></td></tr>' +
+          action_map_str +
           '</tbody></table>'
       );
       el_wrapper.appendChild(button);

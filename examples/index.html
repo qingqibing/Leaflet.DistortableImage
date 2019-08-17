@@ -55,7 +55,9 @@
       }).addTo(map);
 
       // todo: make dynamic
-      L.distortableImage.keymapper(map, { position: 'topleft' });
+      window.onload = function() {
+        L.distortableImage.keymapper(map, { position: 'topleft' });
+      }
     })();
   </script>
 </html>
